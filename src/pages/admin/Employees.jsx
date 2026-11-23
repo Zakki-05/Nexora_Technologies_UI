@@ -127,8 +127,11 @@ export const AdminEmployees = () => {
   }, []);
 
   useEffect(() => {
-    fetchEmployees();
-  }, [page, departmentId, statusFilter]);
+    const timer = setTimeout(() => {
+      fetchEmployees();
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [page, search, departmentId, statusFilter]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -335,12 +338,28 @@ export const AdminEmployees = () => {
           <div className="sm:col-span-2 relative">
             <input
               type="text"
-              placeholder="Search by name, code, phone, or position..."
+              placeholder="Search by name, code, phone, position, or email..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3.5 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-slate-100"
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
+              className="w-full pl-9 pr-8 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-slate-100"
             />
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+            {search && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSearch('');
+                  setPage(1);
+                }}
+                className="absolute right-2.5 top-2.5 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs font-bold"
+                title="Clear search"
+              >
+                ✕
+              </button>
+            )}
           </div>
 
           <select

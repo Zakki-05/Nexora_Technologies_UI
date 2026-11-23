@@ -16,6 +16,7 @@ import {
   Plus,
   Server,
   Lock,
+  Search,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -29,6 +30,8 @@ export const AdminSettings = () => {
   const [userPage, setUserPage] = useState(1);
   const [totalUserPages, setTotalUserPages] = useState(1);
   const [totalUsers, setTotalUsers] = useState(0);
+  const [userSearch, setUserSearch] = useState('');
+  const [roleFilter, setRoleFilter] = useState('');
 
   // New User Modal State
   const [showAddUserModal, setShowAddUserModal] = useState(false);
@@ -49,14 +52,22 @@ export const AdminSettings = () => {
 
   useEffect(() => {
     if (activeTab === 'users') {
-      fetchUsers();
+      const timer = setTimeout(() => {
+        fetchUsers();
+      }, 300);
+      return () => clearTimeout(timer);
     }
-  }, [activeTab, userPage]);
+  }, [activeTab, userPage, userSearch, roleFilter]);
 
   const fetchUsers = async () => {
     setLoadingUsers(true);
     try {
-      const res = await authApi.getUsers({ page: userPage, size: 20 });
+      const res = await authApi.getUsers({
+        page: userPage,
+        size: 20,
+        search: userSearch ? userSearch.trim() : undefined,
+        role: roleFilter || undefined,
+      });
       setUsers(res.items || []);
       setTotalUserPages(res.pages || 1);
       setTotalUsers(res.total || 0);
@@ -194,18 +205,70 @@ export const AdminSettings = () => {
       {/* Tab: Users */}
       {activeTab === 'users' && (
         <div className="space-y-4">
-          <div className="flex justify-between items-center">
+          {/* Header Controls */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-slate-50 dark:bg-slate-800/40 p-3.5 rounded-xl border border-slate-200 dark:border-slate-800">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder="Search users by email or username..."
+                value={userSearch}
+                onChange={(e) => {
+                  setUserSearch(e.target.value);
+                  setUserPage(1);
+                }}
+                className="w-full pl-9 pr-8 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-slate-100"
+              />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+              {userSearch && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUserSearch('');
+                    setUserPage(1);
+                  }}
+                  className="absolute right-2.5 top-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs font-bold"
+                  title="Clear search"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-2">
+              <select
+                value={roleFilter}
+                onChange={(e) => {
+                  setRoleFilter(e.target.value);
+                  setUserPage(1);
+                }}
+                className="px-3 py-2 text-xs rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-slate-900 dark:text-slate-100"
+              >
+                <option value="">All Roles</option>
+                <option value="SUPER_ADMIN">SUPER_ADMIN</option>
+                <option value="ADMIN">ADMIN</option>
+                <option value="EMPLOYEE">EMPLOYEE</option>
+              </select>
+
+              <Button
+                variant="primary"
+                onClick={() => setShowAddUserModal(true)}
+                icon={Plus}
+                className="text-xs shrink-0"
+              >
+                Add User Account
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex justify-between items-center px-1">
             <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
               Total Registered Users: {totalUsers}
+              {userSearch && (
+                <span className="text-emerald-600 dark:text-emerald-400 ml-2 font-normal lowercase">
+                  (filtered by &quot;{userSearch}&quot;)
+                </span>
+              )}
             </p>
-            <Button
-              variant="primary"
-              onClick={() => setShowAddUserModal(true)}
-              icon={Plus}
-              className="text-xs"
-            >
-              Add User Account
-            </Button>
           </div>
 
           <Card className="p-0 overflow-hidden">
