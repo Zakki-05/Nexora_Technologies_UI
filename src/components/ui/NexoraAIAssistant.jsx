@@ -49,8 +49,9 @@ export const NexoraAIAssistant = () => {
   const quickPrompts = [
     { label: '🏖️ Leave Balances & Rules', query: 'What are the company leave policies and quota allocations?' },
     { label: '💰 EPF & ESIC Deduction Math', query: 'How are statutory EPF, ESIC, and take-home salary calculated?' },
+    { label: '⚖️ Gratuity & Maternity Law', query: 'What are the statutory rules for Gratuity and Maternity Benefits in India?' },
+    { label: '🏢 SaaS Plans & Enterprise Quota', query: 'What are the subscription tiers and feature entitlements for Nexora Workforce?' },
     { label: '⏱️ Working Hours & Shift Rules', query: 'What is the daily shift duration, grace period, and punch-in rule?' },
-    { label: '🗓️ Company Holidays', query: 'What are the upcoming corporate holidays?' },
     { label: '🧾 Submit Expense Reimbursement', query: 'How do I claim reimbursement for business travel or equipment?' },
   ];
 
@@ -84,6 +85,31 @@ export const NexoraAIAssistant = () => {
 
   const generateSmartResponse = (q, currentUser, adminFlag) => {
     const lower = q.toLowerCase();
+
+    if (lower.includes('gratuity') || lower.includes('maternity') || lower.includes('law') || lower.includes('benefit')) {
+      return (
+        `### ⚖️ Indian Statutory Labor Law Compliance\n\n` +
+        `* **Payment of Gratuity Act, 1972:**\n` +
+        `  * Eligibility: Minimum **5 years** of continuous service.\n` +
+        `  * Formula: \\( \\frac{15 \\times \\text{Last Drawn Basic} \\times \\text{Tenure (Years)}}{26} \\)\n` +
+        `  * Tax-Free Exemption Cap: Up to ₹20,000,000 (20 Lakhs INR).\n\n` +
+        `* **Maternity Benefit (Amendment) Act, 2017:**\n` +
+        `  * Entitlement: **26 weeks (180 days)** of fully paid maternity leave for up to two surviving children.\n` +
+        `  * Work-from-Home Option: Mutually agreed hybrid allowance upon completion of leave period.\n` +
+        `  * Crèche / Childcare: Mandated for establishments with 50+ employees.`
+      );
+    }
+
+    if (lower.includes('plan') || lower.includes('tier') || lower.includes('quota') || lower.includes('subscription') || lower.includes('saas') || lower.includes('pricing')) {
+      return (
+        `### 🏢 Nexora Workforce 2.0 — Commercial SaaS Tiers\n\n` +
+        `* **Community Free (₹0/mo):** Up to 15 employees, single session punch, basic leave ledgers.\n` +
+        `* **Growth Starter (₹2,999/mo):** Up to 50 employees, multi-session clock, EPF/ESIC payroll, document storage.\n` +
+        `* **Business Pro (₹7,999/mo):** Up to 250 employees, Interactive Org Chart, Expense Reimbursements, RBAC, 1-Click Excel.\n` +
+        `* **Enterprise Unlimited (₹19,999/mo):** Unlimited employees, Multi-Tenant Scoping, 24/7 Nexora AI, PWA & Native Mobile App.\n\n` +
+        `🏛️ **Active Tenant:** **Nexora Technologies Inc.** is running on **Enterprise Unlimited** with multi-tenant data isolation.`
+      );
+    }
 
     if (lower.includes('leave') || lower.includes('casual') || lower.includes('sick') || lower.includes('vacation')) {
       return (
