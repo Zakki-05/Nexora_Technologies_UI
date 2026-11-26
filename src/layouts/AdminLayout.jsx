@@ -7,6 +7,7 @@ import { LoadingSpinner } from '../components/ui/Modal';
 import { PageTransition } from '../components/ui/PageTransition';
 import { BrandWatermark } from '../components/ui/BrandWatermark';
 import { PortalFooter } from '../components/navigation/PortalFooter';
+import { MobileBottomNav } from '../components/navigation/MobileBottomNav';
 import { NexoraAIAssistant } from '../components/ui/NexoraAIAssistant';
 
 export const AdminLayout = () => {
@@ -37,7 +38,7 @@ export const AdminLayout = () => {
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="flex-1 flex flex-col min-w-0 h-full overflow-y-auto relative z-10">
         <Navbar onToggleSidebar={() => setSidebarOpen(true)} />
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto pb-24 md:pb-8">
           <PageTransition>
             <Outlet />
           </PageTransition>
@@ -45,6 +46,8 @@ export const AdminLayout = () => {
         {/* Official Company Logo Footer at the bottom of every page */}
         <PortalFooter />
       </div>
+      {/* Ergonomic Mobile 1-Thumb Bottom Navigation */}
+      <MobileBottomNav onOpenSidebar={() => setSidebarOpen(true)} />
       {/* 24/7 Nexora AI HR & Workforce Copilot */}
       <NexoraAIAssistant />
     </div>
@@ -75,7 +78,7 @@ export const EmployeeLayout = () => {
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="flex-1 flex flex-col min-w-0 h-full overflow-y-auto relative z-10">
         <Navbar onToggleSidebar={() => setSidebarOpen(true)} />
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto pb-24 md:pb-8">
           <PageTransition>
             <Outlet />
           </PageTransition>
@@ -83,6 +86,8 @@ export const EmployeeLayout = () => {
         {/* Official Company Logo Footer at the bottom of every page */}
         <PortalFooter />
       </div>
+      {/* Ergonomic Mobile 1-Thumb Bottom Navigation */}
+      <MobileBottomNav onOpenSidebar={() => setSidebarOpen(true)} />
       {/* 24/7 Nexora AI HR & Workforce Copilot */}
       <NexoraAIAssistant />
     </div>
