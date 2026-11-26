@@ -22,6 +22,8 @@ import {
   ChevronRight,
   LogOut,
   Shield,
+  Network,
+  Receipt,
 } from 'lucide-react';
 
 export const Sidebar = ({ isOpen, onClose }) => {
@@ -31,11 +33,13 @@ export const Sidebar = ({ isOpen, onClose }) => {
   const adminNavItems = [
     { label: 'Overview', to: '/admin', icon: LayoutDashboard },
     { label: 'Employees', to: '/admin/employees', icon: Users },
+    { label: 'Org Hierarchy', to: '/admin/org-chart', icon: Network },
     { label: 'Departments', to: '/admin/departments', icon: Building2 },
     { label: 'Attendance', to: '/admin/attendance', icon: CalendarCheck },
     { label: 'Leave Requests', to: '/admin/leaves', icon: CalendarDays },
     { label: 'Holidays', to: '/admin/holidays', icon: Sparkles },
     { label: 'Salaries & Payroll', to: '/admin/salaries', icon: IndianRupee },
+    { label: 'Expense Claims', to: '/admin/expenses', icon: Receipt },
     { label: 'Reports & Exports', to: '/admin/reports', icon: FileText },
     { label: 'Broadcasts', to: '/admin/notifications', icon: Bell },
     { label: 'Audit Logs', to: '/admin/audit-logs', icon: ShieldAlert },
@@ -50,6 +54,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
     { label: 'My Leave History', to: '/employee/leaves', icon: FileText },
     { label: 'Company Holidays', to: '/employee/holidays', icon: Sparkles },
     { label: 'My Salary & Slips', to: '/employee/salary', icon: IndianRupee },
+    { label: 'My Expense Claims', to: '/employee/expenses', icon: Receipt },
     { label: 'My Documents', to: '/employee/documents', icon: FolderOpen },
     { label: 'Notifications', to: '/employee/notifications', icon: Bell },
     { label: 'Change Password', to: '/employee/password', icon: KeyRound },

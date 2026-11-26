@@ -20,6 +20,8 @@ import { AdminReports } from '../pages/admin/Reports';
 import { AdminNotifications } from '../pages/admin/Notifications';
 import { AdminAuditLogs } from '../pages/admin/AuditLogs';
 import { AdminSettings } from '../pages/admin/Settings';
+import { AdminOrgChart } from '../pages/admin/OrgChart';
+import { AdminExpenses } from '../pages/admin/Expenses';
 
 // Employee Pages
 import { EmployeeOverview } from '../pages/employee/Overview';
@@ -32,6 +34,7 @@ import { EmployeeSalary } from '../pages/employee/MySalary';
 import { EmployeeDocuments } from '../pages/employee/MyDocuments';
 import { EmployeeNotifications } from '../pages/employee/MyNotifications';
 import { EmployeeChangePassword } from '../pages/employee/ChangePassword';
+import { EmployeeExpenses } from '../pages/employee/MyExpenses';
 
 // Root Redirect Component
 const RootRedirect = () => {
@@ -64,11 +67,13 @@ export const AppRoutes = () => {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminOverview />} />
           <Route path="employees" element={<AdminEmployees />} />
+          <Route path="org-chart" element={<AdminOrgChart />} />
           <Route path="departments" element={<AdminDepartments />} />
           <Route path="attendance" element={<AdminAttendance />} />
           <Route path="leaves" element={<AdminLeaves />} />
           <Route path="holidays" element={<AdminHolidays />} />
           <Route path="salaries" element={<AdminSalaries />} />
+          <Route path="expenses" element={<AdminExpenses />} />
           <Route path="reports" element={<AdminReports />} />
           <Route path="notifications" element={<AdminNotifications />} />
           <Route path="audit-logs" element={<AdminAuditLogs />} />
@@ -86,6 +91,7 @@ export const AppRoutes = () => {
           <Route path="leaves" element={<EmployeeLeaves />} />
           <Route path="holidays" element={<EmployeeHolidays />} />
           <Route path="salary" element={<EmployeeSalary />} />
+          <Route path="expenses" element={<EmployeeExpenses />} />
           <Route path="documents" element={<EmployeeDocuments />} />
           <Route path="notifications" element={<EmployeeNotifications />} />
           <Route path="password" element={<EmployeeChangePassword />} />

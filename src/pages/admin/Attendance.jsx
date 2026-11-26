@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { attendanceApi } from '../../api/attendance';
 import { departmentApi } from '../../api/departments';
 import { employeeApi } from '../../api/employees';
+import { reportApi } from '../../api/reports';
 import { Card, Badge, StatCard } from '../../components/ui/Badge';
 import { Button } from '../../components/ui/Button';
 import { Input, Select } from '../../components/ui/Input';
@@ -16,6 +17,8 @@ import {
   Edit2,
   Calendar,
   AlertTriangle,
+  FileSpreadsheet,
+  Download,
 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
@@ -181,9 +184,28 @@ export const AdminAttendance = () => {
             Monitor check-ins, punctuality, working hours, and correct discrepancies
           </p>
         </div>
-        <Button onClick={handleOpenManual} className="sm:self-auto self-start">
-          <Plus className="w-4 h-4 mr-1.5" /> Manual Record
-        </Button>
+        <div className="flex items-center space-x-2 sm:self-auto self-start">
+          <button
+            type="button"
+            onClick={() => {
+              toast.success('Generating Attendance Excel report...');
+              reportApi.exportExcel('attendance', {
+                start_date: startDate || undefined,
+                end_date: endDate || undefined,
+                department_id: departmentId ? parseInt(departmentId, 10) : undefined,
+              });
+            }}
+            className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-xl text-xs font-semibold border bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/20 transition-all shadow-sm cursor-pointer"
+            title="Download attendance records as Excel (.xlsx)"
+          >
+            <FileSpreadsheet className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+            <span className="hidden sm:inline">Export Excel</span>
+          </button>
+
+          <Button onClick={handleOpenManual}>
+            <Plus className="w-4 h-4 mr-1.5" /> Manual Record
+          </Button>
+        </div>
       </div>
 
       {/* Daily Performance Metrics */}

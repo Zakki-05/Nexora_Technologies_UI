@@ -7,6 +7,7 @@ import { LoadingSpinner } from '../components/ui/Modal';
 import { PageTransition } from '../components/ui/PageTransition';
 import { BrandWatermark } from '../components/ui/BrandWatermark';
 import { PortalFooter } from '../components/navigation/PortalFooter';
+import { NexoraAIAssistant } from '../components/ui/NexoraAIAssistant';
 
 export const AdminLayout = () => {
   const { user, loading, isAdmin } = useAuth();
@@ -44,6 +45,8 @@ export const AdminLayout = () => {
         {/* Official Company Logo Footer at the bottom of every page */}
         <PortalFooter />
       </div>
+      {/* 24/7 Nexora AI HR & Workforce Copilot */}
+      <NexoraAIAssistant />
     </div>
   );
 };
@@ -80,6 +83,8 @@ export const EmployeeLayout = () => {
         {/* Official Company Logo Footer at the bottom of every page */}
         <PortalFooter />
       </div>
+      {/* 24/7 Nexora AI HR & Workforce Copilot */}
+      <NexoraAIAssistant />
     </div>
   );
 };
