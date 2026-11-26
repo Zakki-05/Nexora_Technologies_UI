@@ -20,6 +20,7 @@ import {
   ExternalLink,
   Search,
   Sparkles,
+  Building2,
 } from 'lucide-react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 
@@ -135,6 +136,15 @@ export const Navbar = ({ onToggleSidebar }) => {
               <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
               <span className="font-semibold text-slate-500 dark:text-[#94A3B8]">
                 {breadcrumbTitle}
+              </span>
+            </div>
+
+            {/* Enterprise Tenant Indicator */}
+            <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50/80 dark:bg-blue-950/40 border border-blue-200/60 dark:border-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-semibold">
+              <Building2 className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+              <span>Nexora Technologies Inc.</span>
+              <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.5 rounded bg-blue-600 text-white font-bold ml-1">
+                Enterprise
               </span>
             </div>
           </div>
