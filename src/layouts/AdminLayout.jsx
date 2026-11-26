@@ -8,6 +8,7 @@ import { PageTransition } from '../components/ui/PageTransition';
 import { BrandWatermark } from '../components/ui/BrandWatermark';
 import { PortalFooter } from '../components/navigation/PortalFooter';
 import { MobileBottomNav } from '../components/navigation/MobileBottomNav';
+import { PWAInstallBanner } from '../components/ui/PWAInstallBanner';
 import { NexoraAIAssistant } from '../components/ui/NexoraAIAssistant';
 
 export const AdminLayout = () => {
@@ -48,6 +49,8 @@ export const AdminLayout = () => {
       </div>
       {/* Ergonomic Mobile 1-Thumb Bottom Navigation */}
       <MobileBottomNav onOpenSidebar={() => setSidebarOpen(true)} />
+      {/* Install PWA Prompt Banner */}
+      <PWAInstallBanner />
       {/* 24/7 Nexora AI HR & Workforce Copilot */}
       <NexoraAIAssistant />
     </div>
@@ -88,6 +91,8 @@ export const EmployeeLayout = () => {
       </div>
       {/* Ergonomic Mobile 1-Thumb Bottom Navigation */}
       <MobileBottomNav onOpenSidebar={() => setSidebarOpen(true)} />
+      {/* Install PWA Prompt Banner */}
+      <PWAInstallBanner />
       {/* 24/7 Nexora AI HR & Workforce Copilot */}
       <NexoraAIAssistant />
     </div>
