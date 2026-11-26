@@ -38,6 +38,9 @@ export const AuthProvider = ({ children }) => {
     try {
       const data = await authApi.login(email, password);
       localStorage.setItem('token', data.access_token);
+      if (data.refresh_token) {
+        localStorage.setItem('refreshToken', data.refresh_token);
+      }
       setToken(data.access_token);
 
       const profile = data.user || (await authApi.getProfile());
@@ -61,6 +64,7 @@ export const AuthProvider = ({ children }) => {
       // Ignore
     } finally {
       localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
       localStorage.removeItem('user');
       setToken(null);
       setUser(null);
@@ -80,9 +84,12 @@ export const AuthProvider = ({ children }) => {
   };
 
   const role = user?.role?.toUpperCase();
-  const isAdmin = role === 'ADMIN' || role === 'SUPER_ADMIN';
-  const isSuperAdmin = role === 'SUPER_ADMIN';
-  const isEmployee = role === 'EMPLOYEE';
+  const isAdmin = ['ADMIN', 'SUPER_ADMIN', 'COMPANY_ADMIN', 'PLATFORM_SUPER_ADMIN'].includes(role);
+  const isSuperAdmin = ['SUPER_ADMIN', 'PLATFORM_SUPER_ADMIN'].includes(role);
+  const isHR = isAdmin || role === 'HR_MANAGER';
+  const isFinance = isAdmin || ['FINANCE_MANAGER', 'PAYROLL_MANAGER'].includes(role);
+  const isAuditor = isAdmin || role === 'AUDITOR';
+  const isEmployee = !isAdmin;
 
   return (
     <AuthContext.Provider
@@ -95,6 +102,9 @@ export const AuthProvider = ({ children }) => {
         refreshProfile,
         isAdmin,
         isSuperAdmin,
+        isHR,
+        isFinance,
+        isAuditor,
         isEmployee,
         role,
       }}

@@ -28,10 +28,25 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response Interceptor: Global Error Handling
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error, token = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+  failedQueue = [];
+};
+
+// Response Interceptor: Global Error Handling & Refresh Token Rotation
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
+    const originalRequest = error.config;
     const status = error.response ? error.response.status : null;
     let detail = 'An unexpected error occurred. Please try again.';
 
@@ -41,16 +56,67 @@ api.interceptors.response.use(
       detail = error.message;
     }
 
-    if (status === 400) {
-      toast.error(detail || 'Bad request. Please check submitted data.');
-    } else if (status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      // Redirect to login if not already there
-      if (!window.location.pathname.startsWith('/login')) {
-        toast.error('Session expired. Please log in again.');
-        window.location.href = '/login';
+    // Handle 401 Unauthorized with Refresh Token rotation
+    if (status === 401 && !originalRequest._retry && !originalRequest.url.includes('/auth/login') && !originalRequest.url.includes('/auth/refresh')) {
+      const refreshToken = localStorage.getItem('refreshToken');
+
+      if (refreshToken) {
+        if (isRefreshing) {
+          return new Promise((resolve, reject) => {
+            failedQueue.push({ resolve, reject });
+          })
+            .then((token) => {
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+              return api(originalRequest);
+            })
+            .catch((err) => Promise.reject(err));
+        }
+
+        originalRequest._retry = true;
+        isRefreshing = true;
+
+        try {
+          const refreshRes = await axios.post(`${baseURL}/auth/refresh`, {
+            refresh_token: refreshToken,
+          });
+
+          const { access_token, refresh_token: newRefreshToken } = refreshRes.data;
+          localStorage.setItem('token', access_token);
+          if (newRefreshToken) {
+            localStorage.setItem('refreshToken', newRefreshToken);
+          }
+
+          api.defaults.headers.common.Authorization = `Bearer ${access_token}`;
+          originalRequest.headers.Authorization = `Bearer ${access_token}`;
+
+          processQueue(null, access_token);
+          isRefreshing = false;
+          return api(originalRequest);
+        } catch (refreshErr) {
+          processQueue(refreshErr, null);
+          isRefreshing = false;
+          localStorage.removeItem('token');
+          localStorage.removeItem('refreshToken');
+          localStorage.removeItem('user');
+          if (!window.location.pathname.startsWith('/login')) {
+            toast.error('Session expired. Please log in again.');
+            window.location.href = '/login';
+          }
+          return Promise.reject(refreshErr);
+        }
+      } else {
+        localStorage.removeItem('token');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('user');
+        if (!window.location.pathname.startsWith('/login')) {
+          toast.error('Session expired. Please log in again.');
+          window.location.href = '/login';
+        }
       }
+    } else if (status === 429) {
+      toast.error(detail || 'Too many requests. Please wait a moment.');
+    } else if (status === 400) {
+      toast.error(detail || 'Bad request. Please check submitted data.');
     } else if (status === 403) {
       toast.error(detail || 'Access denied. You do not have permission.');
     } else if (status >= 500) {
