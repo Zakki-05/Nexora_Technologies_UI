@@ -42,15 +42,40 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
-// Response Interceptor: Global Error Handling & Refresh Token Rotation
+// Response Interceptor: Envelope Unwrapping, Global Error Handling & Refresh Token Rotation
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    const payload = response?.data;
+    if (
+      payload &&
+      typeof payload === 'object' &&
+      !(payload instanceof Blob) &&
+      !(payload instanceof ArrayBuffer) &&
+      'success' in payload &&
+      'status_code' in payload &&
+      'data' in payload
+    ) {
+      response.envelope = {
+        success: payload.success,
+        message: payload.message,
+        status_code: payload.status_code,
+      };
+      response.data = payload.data;
+    }
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
     const status = error.response ? error.response.status : null;
     let detail = 'An unexpected error occurred. Please try again.';
 
-    if (error.response?.data?.detail) {
+    if (error.response?.data?.message) {
+      detail = error.response.data.message;
+      // Preserve backward compatibility for components reading error.response.data.detail
+      if (!error.response.data.detail) {
+        error.response.data.detail = detail;
+      }
+    } else if (error.response?.data?.detail) {
       detail = error.response.data.detail;
     } else if (error.message) {
       detail = error.message;
@@ -80,7 +105,8 @@ api.interceptors.response.use(
             refresh_token: refreshToken,
           });
 
-          const { access_token, refresh_token: newRefreshToken } = refreshRes.data;
+          const refreshPayload = refreshRes.data?.data ?? refreshRes.data;
+          const { access_token, refresh_token: newRefreshToken } = refreshPayload;
           localStorage.setItem('token', access_token);
           if (newRefreshToken) {
             localStorage.setItem('refreshToken', newRefreshToken);
