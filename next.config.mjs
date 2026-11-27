@@ -10,7 +10,7 @@ const nextConfig = {
     unoptimized: isMobileBuild,
   },
   eslint: {
-    dirs: ['src/app', 'src/providers', 'src/components/layout', 'src/components/landing', 'src/services', 'src/types', 'tests'],
+    dirs: ['src/app', 'src/providers', 'src/components/layout', 'src/components/landing', 'src/components/shared', 'src/services', 'src/types', 'tests'],
   },
 };
 

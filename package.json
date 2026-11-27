@@ -10,7 +10,7 @@
     "next:dev": "next dev",
     "next:build": "next build",
     "next:start": "next start",
-    "lint": "eslint src/app src/providers src/components/layout src/components/landing src/types src/services tests/unit",
+    "lint": "eslint src/app src/providers src/components/layout src/components/landing src/components/shared src/types src/services tests/unit",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
