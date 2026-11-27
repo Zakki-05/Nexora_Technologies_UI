@@ -1,7 +1,0 @@
-User-Agent: *
-Allow: /
-Disallow: /admin/
-Disallow: /employee/
-Disallow: /api/
-
-Sitemap: https://nexoratechnologieszakki.vercel.app/sitemap.xml
