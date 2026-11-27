@@ -1,10 +1,10 @@
 {
-  "/(dashboard)/employee/page": "app/(dashboard)/employee/page.js",
-  "/robots.txt/route": "app/robots.txt/route.js",
   "/(dashboard)/admin/page": "app/(dashboard)/admin/page.js",
+  "/manifest.webmanifest/route": "app/manifest.webmanifest/route.js",
+  "/(auth)/login/page": "app/(auth)/login/page.js",
   "/_not-found/page": "app/_not-found/page.js",
   "/sitemap.xml/route": "app/sitemap.xml/route.js",
-  "/(auth)/login/page": "app/(auth)/login/page.js",
-  "/manifest.webmanifest/route": "app/manifest.webmanifest/route.js",
+  "/robots.txt/route": "app/robots.txt/route.js",
+  "/(dashboard)/employee/page": "app/(dashboard)/employee/page.js",
   "/(public)/page": "app/(public)/page.js"
 }
