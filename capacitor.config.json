@@ -1,7 +1,7 @@
 {
   "appId": "com.nexoratechnologies.workforce",
   "appName": "Nexora Workforce",
-  "webDir": "dist",
+  "webDir": "out",
   "bundledWebRuntime": false,
   "server": {
     "androidScheme": "https"

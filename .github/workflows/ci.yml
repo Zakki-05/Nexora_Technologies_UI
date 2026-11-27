@@ -1,0 +1,25 @@
+name: Nexora Workforce 3.0 — Frontend CI
+
+on:
+  push:
+    branches: [main, migration/nextjs-enterprise]
+  pull_request:
+    branches: [main, migration/nextjs-enterprise]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_API_BASE_URL: https://nexora-technologies-server.onrender.com
+          NEXT_PUBLIC_APP_URL: https://nexoratechnologieszakki.vercel.app
