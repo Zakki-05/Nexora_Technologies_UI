@@ -152,15 +152,15 @@ export const hrService = {
     return res.data;
   },
   getLiveAttendanceStatus: async (): Promise<Record<string, unknown>> => {
-    const res = await apiClient.get<Record<string, unknown>>('/attendance/me/live-status');
+    const res = await apiClient.get<Record<string, unknown>>('/attendance/live-status');
     return res.data;
   },
   punchIn: async (): Promise<AttendanceRecord> => {
-    const res = await apiClient.post<AttendanceRecord>('/attendance/punch-in');
+    const res = await apiClient.post<AttendanceRecord>('/attendance/check-in');
     return res.data;
   },
   punchOut: async (): Promise<AttendanceRecord> => {
-    const res = await apiClient.post<AttendanceRecord>('/attendance/punch-out');
+    const res = await apiClient.post<AttendanceRecord>('/attendance/check-out');
     return res.data;
   },
 
