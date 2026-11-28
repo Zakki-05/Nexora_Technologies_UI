@@ -9,7 +9,6 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Settings,
-  Sparkles,
   Wrench,
 } from 'lucide-react';
 import { useAuth } from '@/providers/AuthProvider';
@@ -18,6 +17,7 @@ import { AISidebar } from '@/components/ai/AISidebar';
 import { AIMessage } from '@/components/ai/AIMessage';
 import { AIChatInput } from '@/components/ai/AIChatInput';
 import { AIMarkdown } from '@/components/ai/AIMarkdown';
+import { NexoraAIOrb, type AIOrbState } from '@/components/ai/NexoraAIOrb';
 
 const SUGGESTED_PROMPTS_EMPLOYEE = [
   'What is my current leave balance?',
@@ -78,6 +78,15 @@ export function AIChat({ compact = false, onExpandToPage }: AIChatProps) {
   const prompts = isAdmin ? SUGGESTED_PROMPTS_ADMIN : SUGGESTED_PROMPTS_EMPLOYEE;
   const aiDisabled = !isLoadingStatus && status !== null && !status.enabled;
   const lastAssistantId = [...messages].reverse().find((m) => m.role === 'assistant')?.id;
+  const orbState: AIOrbState = aiDisabled
+    ? 'error'
+    : isStreaming
+    ? streamingContent
+      ? 'generating'
+      : 'processing'
+    : messages.length > 0
+    ? 'completed'
+    : 'idle';
 
   return (
     <div className="flex h-full w-full overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#0B162C] shadow-sm">
@@ -111,9 +120,7 @@ export function AIChat({ compact = false, onExpandToPage }: AIChatProps) {
                 {showSidebar ? <PanelLeftClose className="w-4 h-4" /> : <PanelLeftOpen className="w-4 h-4" />}
               </button>
             )}
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#2563EB] to-[#0891B2] text-white flex items-center justify-center shrink-0">
-              <Sparkles className="w-4 h-4" />
-            </div>
+            <NexoraAIOrb state={orbState} size="sm" />
             <div className="min-w-0">
               <h2 className="text-sm font-bold text-slate-900 dark:text-white truncate">
                 Nexora Copilot

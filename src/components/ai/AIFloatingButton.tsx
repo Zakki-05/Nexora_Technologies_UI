@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Bot, Sparkles, X } from 'lucide-react';
+import { Sparkles, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { AIChat } from '@/components/ai/AIChat';
+import { NexoraAIOrb } from '@/components/ai/NexoraAIOrb';
 
 export function AIFloatingButton() {
   const pathname = usePathname();
@@ -32,7 +33,7 @@ export function AIFloatingButton() {
     <div className="fixed bottom-20 md:bottom-6 right-4 md:right-6 z-50 w-[min(94vw,420px)] h-[min(78vh,600px)] flex flex-col shadow-2xl rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#0B162C]">
       <div className="flex items-center justify-between px-3 py-2 bg-gradient-to-r from-[#2563EB] to-[#0891B2] text-white">
         <div className="flex items-center gap-2 text-xs font-bold">
-          <Bot className="w-4 h-4" />
+          <NexoraAIOrb state="idle" size="sm" />
           <span>Nexora AI Copilot</span>
         </div>
         <button

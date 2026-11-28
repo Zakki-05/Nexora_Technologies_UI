@@ -53,11 +53,11 @@ export function StatCard({
   } as const;
 
   return (
-    <div className="p-5 rounded-2xl bg-white dark:bg-[#111C32] border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-start justify-between">
+    <div className="p-5 rounded-2xl bg-[var(--surface)] border border-[var(--border)] shadow-sm hover:shadow-md transition-shadow flex items-start justify-between">
       <div>
-        <p className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{title}</p>
-        <p className="text-2xl font-extrabold text-slate-900 dark:text-white mt-1.5">{value}</p>
-        {subtitle && <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{subtitle}</p>}
+        <p className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)]">{title}</p>
+        <p className="font-mono text-2xl font-extrabold tabular-nums text-[var(--text-primary)] mt-1.5">{value}</p>
+        {subtitle && <p className="text-xs text-[var(--text-secondary)] mt-1">{subtitle}</p>}
       </div>
       <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${colorMap[accent]}`}>
         <Icon className="w-5 h-5" />
@@ -102,8 +102,8 @@ export function PageHeader({
   return (
     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
       <div>
-        <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">{title}</h1>
-        {subtitle && <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">{subtitle}</p>}
+        <h1 className="font-display text-2xl font-bold tracking-tight text-[var(--text-primary)]">{title}</h1>
+        {subtitle && <p className="text-sm text-[var(--text-secondary)] mt-0.5">{subtitle}</p>}
       </div>
       {actions && <div className="flex flex-wrap items-center gap-2.5">{actions}</div>}
     </div>
