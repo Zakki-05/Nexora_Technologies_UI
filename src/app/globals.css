@@ -1,8 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @import '../styles/tokens/nexora-tokens.css';
+
+:root {
+  --font-space-grotesk: 'Space Grotesk';
+  --font-mono: 'JetBrains Mono';
+}
 
 @layer base {
   body {
