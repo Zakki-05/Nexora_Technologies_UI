@@ -18,6 +18,7 @@ export function useNexoraAI() {
   const [messages, setMessages] = useState<AIMessage[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoadingStatus, setIsLoadingStatus] = useState(true);
+  const [statusError, setStatusError] = useState<string | null>(null);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [streamingContent, setStreamingContent] = useState('');
@@ -30,8 +31,12 @@ export function useNexoraAI() {
     try {
       const data = await aiService.getStatus();
       setStatus(data);
+      setStatusError(null);
     } catch {
       setStatus(null);
+      setStatusError(
+        'Nexora AI Gateway (/ai/status) is unreachable on the active backend URL.'
+      );
     } finally {
       setIsLoadingStatus(false);
     }
@@ -111,6 +116,7 @@ export function useNexoraAI() {
       const controller = new AbortController();
       abortRef.current = controller;
       let resolvedConvId = activeConversationId;
+      let streamHadError = false;
 
       try {
         await aiService.streamMessage(
@@ -130,13 +136,33 @@ export function useNexoraAI() {
               setStreamingContent((prev) => prev + delta);
             },
             onError: (err) => {
-              toast.error(err.message || 'AI response failed.');
+              streamHadError = true;
+              if (!activeConversationId) {
+                resolvedConvId = null;
+                setActiveConversationId(null);
+              }
+              const msg = err.message || 'AI response failed.';
+              toast.error(msg);
+              setMessages((prev) => [
+                ...prev,
+                {
+                  id: -Date.now() - 1,
+                  conversation_id: resolvedConvId || 0,
+                  role: 'assistant',
+                  content: `**Unable to complete request:** ${msg}`,
+                  prompt_tokens: 0,
+                  completion_tokens: 0,
+                  total_tokens: 0,
+                  status: 'error',
+                  created_at: new Date().toISOString(),
+                },
+              ]);
             },
           },
           controller.signal
         );
 
-        if (resolvedConvId) {
+        if (resolvedConvId && !streamHadError) {
           const freshMessages = await aiService.getMessages(resolvedConvId);
           setMessages(freshMessages);
           await refreshConversations(searchQuery);
@@ -144,7 +170,22 @@ export function useNexoraAI() {
         await refreshStatus();
       } catch (err) {
         if ((err as Error).name !== 'AbortError') {
-          toast.error((err as Error).message || 'Unable to reach Nexora Copilot.');
+          const msg = (err as Error).message || 'Unable to reach Nexora Copilot.';
+          toast.error(msg);
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: -Date.now() - 2,
+              conversation_id: resolvedConvId || 0,
+              role: 'assistant',
+              content: `**Connection error:** ${msg}`,
+              prompt_tokens: 0,
+              completion_tokens: 0,
+              total_tokens: 0,
+              status: 'error',
+              created_at: new Date().toISOString(),
+            },
+          ]);
         }
       } finally {
         setIsStreaming(false);
@@ -214,6 +255,7 @@ export function useNexoraAI() {
 
   return {
     status,
+    statusError,
     conversations,
     activeConversationId,
     messages,

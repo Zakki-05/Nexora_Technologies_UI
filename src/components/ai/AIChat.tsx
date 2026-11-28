@@ -42,6 +42,7 @@ export function AIChat({ compact = false, onExpandToPage }: AIChatProps) {
   const { isAdmin } = useAuth();
   const {
     status,
+    statusError,
     conversations,
     activeConversationId,
     messages,
@@ -76,7 +77,7 @@ export function AIChat({ compact = false, onExpandToPage }: AIChatProps) {
   }, [messages, streamingContent]);
 
   const prompts = isAdmin ? SUGGESTED_PROMPTS_ADMIN : SUGGESTED_PROMPTS_EMPLOYEE;
-  const aiDisabled = !isLoadingStatus && status !== null && !status.enabled;
+  const aiDisabled = !isLoadingStatus && (Boolean(statusError) || (status !== null && !status.enabled));
   const lastAssistantId = [...messages].reverse().find((m) => m.role === 'assistant')?.id;
   const orbState: AIOrbState = aiDisabled
     ? 'error'
@@ -161,9 +162,13 @@ export function AIChat({ compact = false, onExpandToPage }: AIChatProps) {
           <div className="mx-4 mt-3 px-3.5 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 flex items-start gap-2.5 text-xs text-amber-800 dark:text-amber-200">
             <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5 text-amber-600 dark:text-amber-400" />
             <div>
-              <p className="font-semibold">Nexora AI is not activated yet.</p>
+              <p className="font-semibold">
+                {statusError ? 'Nexora AI Gateway not reachable.' : 'Nexora AI is not activated yet.'}
+              </p>
               <p className="opacity-90">
-                {!status?.server_enabled || !status?.has_credentials
+                {statusError
+                  ? `${statusError} Point NEXT_PUBLIC_API_BASE_URL to your local FastAPI backend (http://localhost:8000) or deploy the updated backend.`
+                  : !status?.server_enabled || !status?.has_credentials
                   ? 'Backend AI_ENABLED=true and a provider API key (e.g., GEMINI_API_KEY) must be configured on the server.'
                   : 'An administrator must enable Nexora AI in AI Settings.'}
               </p>
