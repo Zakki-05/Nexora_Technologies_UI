@@ -9,7 +9,7 @@ import { PageHeader, StatCard } from '@/components/shared/UiPrimitives';
 import { DashboardSkeleton } from '@/components/feedback/NexoraSkeletons';
 import { useAuth } from '@/providers/AuthProvider';
 import { hrService } from '@/services/hrService';
-import { Bot, CalendarCheck, CalendarDays, IndianRupee, Play, Receipt, Square } from 'lucide-react';
+import { CalendarCheck, CalendarDays, IndianRupee, Play, Receipt, Square } from 'lucide-react';
 
 export default function EmployeeOverviewPage() {
   const { user } = useAuth();
@@ -106,11 +106,11 @@ export default function EmployeeOverviewPage() {
             </div>
 
             <Link
-              href="/ai"
+              href="/employee/attendance"
               className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#2563EB] text-white text-xs font-semibold shadow-sm"
             >
-              <Bot className="w-4 h-4" />
-              <span>Ask Nexora Copilot</span>
+              <CalendarCheck className="w-4 h-4" />
+              <span>View Attendance</span>
             </Link>
           </div>
 

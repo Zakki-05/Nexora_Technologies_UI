@@ -6,7 +6,6 @@ import { useAuth } from '@/providers/AuthProvider';
 import { NextSidebar } from '@/components/layout/NextSidebar';
 import { NextNavbar } from '@/components/layout/NextNavbar';
 import { NextMobileBottomNav } from '@/components/layout/NextMobileBottomNav';
-import { NexoraCopilot } from '@/components/shared/NexoraCopilot';
 import { CommandPalette } from '@/components/navigation/CommandPalette';
 import { DashboardSkeleton } from '@/components/feedback/NexoraSkeletons';
 
@@ -66,7 +65,6 @@ export function DashboardShell({ requireAdmin = false, children }: DashboardShel
         </main>
       </div>
       <NextMobileBottomNav onOpenSidebar={() => setSidebarOpen(true)} />
-      <NexoraCopilot />
       <CommandPalette open={commandOpen} onClose={() => setCommandOpen(false)} />
     </div>
   );

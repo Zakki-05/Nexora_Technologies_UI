@@ -8,10 +8,8 @@ import { PageHeader, StatCard, StatusBadge, formatINR } from '@/components/share
 import { DashboardSkeleton } from '@/components/feedback/NexoraSkeletons';
 import { useAuth } from '@/providers/AuthProvider';
 import { hrService } from '@/services/hrService';
-import { aiService } from '@/features/ai/services/aiService';
 import {
   Activity,
-  Bot,
   Building2,
   CalendarCheck,
   CalendarDays,
@@ -29,12 +27,6 @@ export default function AdminOverviewPage() {
     queryFn: () => hrService.getAdminDashboard(),
   });
 
-  const { data: aiUsage } = useQuery({
-    queryKey: ['superadmin-ai-usage'],
-    queryFn: () => aiService.getUsage(),
-    enabled: isSuperAdmin,
-  });
-
   return (
     <DashboardShell requireAdmin>
       <PageHeader
@@ -49,11 +41,10 @@ export default function AdminOverviewPage() {
               Directory
             </Link>
             <Link
-              href="/ai"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#2563EB] text-white text-xs font-semibold shadow-sm"
+              href="/admin/reports"
+              className="px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#2563EB] text-white text-xs font-semibold shadow-sm"
             >
-              <Bot className="w-3.5 h-3.5" />
-              <span>Nexora Copilot</span>
+              Reports
             </Link>
           </div>
         }
@@ -72,7 +63,7 @@ export default function AdminOverviewPage() {
             <StatCard title="Late Arrivals Today" value={data.today_late} subtitle="Post grace-period punches" icon={Clock} accent="rose" />
           </div>
 
-          {isSuperAdmin && aiUsage && (
+          {isSuperAdmin && (
             <div className="p-5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-violet-500/15 text-violet-500 flex items-center justify-center">
@@ -80,10 +71,10 @@ export default function AdminOverviewPage() {
                 </div>
                 <div>
                   <h2 className="text-sm font-bold text-[var(--text-primary)]">
-                    Platform Governance &amp; AI Telemetry
+                    Platform Governance &amp; Security
                   </h2>
                   <p className="text-xs text-[var(--text-secondary)]">
-                    {aiUsage.total_requests} AI requests &middot; {aiUsage.total_tokens.toLocaleString()} total tokens &middot; {aiUsage.recent_audits.length} recent audit events
+                    Review organization audit events, role permissions, and system configuration.
                   </p>
                 </div>
               </div>
@@ -96,10 +87,10 @@ export default function AdminOverviewPage() {
                   <span>Audit Logs</span>
                 </Link>
                 <Link
-                  href="/admin/ai-settings"
+                  href="/admin/settings"
                   className="px-3 py-2 rounded-xl bg-[var(--surface-elevated)] border border-[var(--border)] text-xs font-semibold"
                 >
-                  AI Settings
+                  Settings
                 </Link>
               </div>
             </div>

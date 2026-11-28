@@ -7,7 +7,6 @@ import { useAuth } from '@/providers/AuthProvider';
 import { NextLogo } from '@/components/layout/NextLogo';
 import {
   Bell,
-  Bot,
   Building2,
   CalendarCheck,
   CalendarDays,
@@ -67,10 +66,8 @@ const ADMIN_NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
-    title: 'Intelligence & Governance',
+    title: 'Governance & Reports',
     items: [
-      { label: 'Nexora Copilot', href: '/ai', icon: Bot },
-      { label: 'AI Settings & RAG', href: '/admin/ai-settings', icon: Sparkles },
       { label: 'Reports & Exports', href: '/admin/reports', icon: FileText },
       { label: 'Broadcasts', href: '/admin/notifications', icon: Bell },
       { label: 'Audit Logs', href: '/admin/audit-logs', icon: ShieldAlert },
@@ -84,7 +81,6 @@ const EMPLOYEE_NAV_GROUPS: NavGroup[] = [
     title: 'Workspace',
     items: [
       { label: 'Overview', href: '/employee', icon: LayoutDashboard },
-      { label: 'Nexora Copilot', href: '/ai', icon: Bot },
       { label: 'My Profile', href: '/employee/profile', icon: User },
     ],
   },

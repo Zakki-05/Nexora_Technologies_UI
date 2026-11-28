@@ -4,7 +4,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  Bot,
   Building2,
   CalendarCheck,
   CalendarDays,
@@ -17,7 +16,6 @@ import {
   Search,
   Settings,
   ShieldAlert,
-  Sparkles,
   Sun,
   User,
   Users,
@@ -65,7 +63,6 @@ export function CommandPalette({
           { id: 'adm-exp', label: 'Expense Claims', group: 'Navigation', keywords: 'reimbursements bills', icon: <Receipt className="w-4 h-4" />, run: () => go('/admin/expenses') },
           { id: 'adm-rep', label: 'Reports & Exports', group: 'Navigation', keywords: 'csv excel pdf', icon: <FileText className="w-4 h-4" />, run: () => go('/admin/reports') },
           { id: 'adm-aud', label: 'Audit Logs', group: 'Navigation', keywords: 'security events compliance', icon: <ShieldAlert className="w-4 h-4" />, run: () => go('/admin/audit-logs') },
-          { id: 'adm-ai', label: 'AI Settings & RAG', group: 'Navigation', keywords: 'gemini llm knowledge', icon: <Sparkles className="w-4 h-4" />, run: () => go('/admin/ai-settings') },
           { id: 'adm-set', label: 'Settings & Users', group: 'Navigation', keywords: 'roles config', icon: <Settings className="w-4 h-4" />, run: () => go('/admin/settings') },
         ]
       : [
@@ -78,14 +75,6 @@ export function CommandPalette({
         ];
 
     const quick: CommandItem[] = [
-      {
-        id: 'act-ai',
-        label: 'Open Nexora Copilot Workspace',
-        group: 'Quick Actions',
-        keywords: 'ai assistant chat copilot',
-        icon: <Bot className="w-4 h-4 text-blue-500" />,
-        run: () => go('/ai'),
-      },
       {
         id: 'thm-dark',
         label: 'Switch Theme: Dark Mode',
