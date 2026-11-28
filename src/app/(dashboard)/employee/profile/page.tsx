@@ -56,6 +56,10 @@ export default function EmployeeProfilePage() {
           <form
             onSubmit={(e) => {
               e.preventDefault();
+              if (phone.trim().length < 10) {
+                toast.error('Phone number must be at least 10 characters.');
+                return;
+              }
               updateMutation.mutate();
             }}
             className="space-y-4 pt-2"

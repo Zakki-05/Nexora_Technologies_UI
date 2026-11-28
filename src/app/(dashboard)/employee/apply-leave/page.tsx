@@ -36,6 +36,14 @@ export default function EmployeeApplyLeavePage() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
+          if (endDate < startDate) {
+            toast.error('End date cannot be earlier than start date.');
+            return;
+          }
+          if (reason.trim().length < 3) {
+            toast.error('Please enter a reason (at least 3 characters).');
+            return;
+          }
           applyMutation.mutate();
         }}
         className="max-w-xl p-6 rounded-2xl bg-white dark:bg-[#111C32] border border-slate-200 dark:border-slate-800 space-y-4 shadow-sm"
@@ -61,7 +69,7 @@ export default function EmployeeApplyLeavePage() {
         </div>
         <div>
           <label className="block text-xs font-bold mb-1.5">Reason</label>
-          <textarea rows={3} required value={reason} onChange={(e) => setReason(e.target.value)} className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#0B1426] text-sm" />
+          <textarea rows={3} required minLength={3} value={reason} onChange={(e) => setReason(e.target.value)} className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-[#0B1426] text-sm" />
         </div>
         <button type="submit" disabled={applyMutation.isPending} className="px-5 py-2.5 rounded-xl bg-[#2563EB] text-white text-xs font-bold">
           {applyMutation.isPending ? 'Submitting...' : 'Submit Leave Request'}

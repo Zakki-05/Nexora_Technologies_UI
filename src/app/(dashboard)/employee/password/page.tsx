@@ -39,7 +39,7 @@ export default function EmployeeChangePasswordPage() {
       toast.success('Password updated successfully');
       reset();
     } catch {
-      // Handled by global Axios interceptor
+      toast.error('Failed to update password. Please verify your current password.');
     }
   };
 

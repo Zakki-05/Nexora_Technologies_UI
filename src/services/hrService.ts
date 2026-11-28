@@ -148,7 +148,7 @@ export const hrService = {
     return res.data;
   },
   getMyAttendance: async (params: Record<string, string | number | undefined> = {}): Promise<PaginatedResponse<AttendanceRecord>> => {
-    const res = await apiClient.get<PaginatedResponse<AttendanceRecord>>('/attendance/me', { params });
+    const res = await apiClient.get<PaginatedResponse<AttendanceRecord>>('/attendance/my-attendance', { params });
     return res.data;
   },
   getLiveAttendanceStatus: async (): Promise<Record<string, unknown>> => {
@@ -170,11 +170,11 @@ export const hrService = {
     return res.data;
   },
   getMyLeaves: async (params: Record<string, string | number | undefined> = {}): Promise<PaginatedResponse<LeaveRecord>> => {
-    const res = await apiClient.get<PaginatedResponse<LeaveRecord>>('/leaves/me', { params });
+    const res = await apiClient.get<PaginatedResponse<LeaveRecord>>('/leaves/my-leaves', { params });
     return res.data;
   },
   getMyLeaveBalance: async (): Promise<Record<string, unknown>> => {
-    const res = await apiClient.get<Record<string, unknown>>('/leaves/my-balance');
+    const res = await apiClient.get<Record<string, unknown>>('/leaves/my-balances');
     return res.data;
   },
   applyLeave: async (data: Record<string, unknown>): Promise<LeaveRecord> => {
@@ -232,15 +232,15 @@ export const hrService = {
     return res.data;
   },
   getMyDocuments: async (): Promise<PaginatedResponse<DocumentRecord> | DocumentRecord[]> => {
-    const res = await apiClient.get<PaginatedResponse<DocumentRecord> | DocumentRecord[]>('/documents/me');
+    const res = await apiClient.get<PaginatedResponse<DocumentRecord> | DocumentRecord[]>('/documents/my-documents');
     return res.data;
   },
   getMyNotifications: async (params: Record<string, string | number | undefined> = {}): Promise<PaginatedResponse<NotificationRecord>> => {
-    const res = await apiClient.get<PaginatedResponse<NotificationRecord>>('/notifications/me', { params });
+    const res = await apiClient.get<PaginatedResponse<NotificationRecord>>('/notifications/', { params });
     return res.data;
   },
   markAllNotificationsRead: async (): Promise<void> => {
-    await apiClient.post('/notifications/mark-all-read');
+    await apiClient.post('/notifications/read-all');
   },
   sendAnnouncement: async (data: { title: string; content: string; priority?: string }): Promise<Record<string, unknown>> => {
     const res = await apiClient.post<Record<string, unknown>>('/announcements/', data);

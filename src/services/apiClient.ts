@@ -158,12 +158,14 @@ apiClient.interceptors.response.use(
     } else if (typeof window !== 'undefined') {
       if (status === 429) {
         toast.error(detail || 'Too many requests. Please wait a moment.');
-      } else if (status === 400) {
-        toast.error(detail || 'Bad request. Please check submitted data.');
+      } else if (status === 400 || status === 404 || status === 409 || status === 422) {
+        toast.error(detail || 'Request could not be processed. Please check your input.');
       } else if (status === 403) {
         toast.error(detail || 'Access denied. You do not have permission.');
       } else if (status !== null && status >= 500) {
         toast.error('Server error. Please contact administrator.');
+      } else if (status === null) {
+        toast.error('Network error. Please verify backend connectivity and CORS settings.');
       }
     }
 
