@@ -26,6 +26,7 @@ import {
   LogOut,
   Network,
   Receipt,
+  Bot,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -53,11 +54,14 @@ const ADMIN_NAV_ITEMS: NavItem[] = [
   { label: 'Reports & Exports', href: '/admin/reports', icon: FileText },
   { label: 'Broadcasts', href: '/admin/notifications', icon: Bell },
   { label: 'Audit Logs', href: '/admin/audit-logs', icon: ShieldAlert },
+  { label: 'Nexora Copilot', href: '/ai', icon: Bot },
+  { label: 'AI Settings & RAG', href: '/admin/ai-settings', icon: Sparkles },
   { label: 'Settings & Users', href: '/admin/settings', icon: Settings },
 ];
 
 const EMPLOYEE_NAV_ITEMS: NavItem[] = [
   { label: 'Overview', href: '/employee', icon: LayoutDashboard },
+  { label: 'Nexora Copilot', href: '/ai', icon: Bot },
   { label: 'My Profile', href: '/employee/profile', icon: User },
   { label: 'My Attendance', href: '/employee/attendance', icon: CalendarCheck },
   { label: 'Apply for Leave', href: '/employee/apply-leave', icon: CalendarDays },
