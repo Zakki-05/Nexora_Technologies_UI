@@ -1,0 +1,56 @@
+/* Nexora Design System 3.0 — Core Design Tokens */
+
+:root {
+  /* Light Theme Surface & Ink Tokens */
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-elevated: #f1f5f9;
+  --primary: #2563eb;
+  --secondary: #7c3aed;
+  --accent: #0891b2;
+  --success: #059669;
+  --warning: #d97706;
+  --danger: #dc2626;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --border: #e2e8f0;
+
+  /* Radius Tokens */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+
+  /* Elevation & Shadow Tokens */
+  --shadow-sm: 0 1px 2px 0 rgb(15 23 42 / 0.05);
+  --shadow-md: 0 8px 24px -6px rgb(15 23 42 / 0.08);
+  --shadow-lg: 0 20px 45px -12px rgb(15 23 42 / 0.14);
+
+  /* Motion Duration & Easing Tokens */
+  --motion-fast: 120ms;
+  --motion-standard: 200ms;
+  --motion-panel: 300ms;
+  --motion-page: 380ms;
+  --motion-cinematic: 800ms;
+  --ease-standard: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.dark {
+  --background: #05070d;
+  --surface: #0b1120;
+  --surface-elevated: #111827;
+  --primary: #3b82f6;
+  --secondary: #8b5cf6;
+  --accent: #22d3ee;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --border: #1e293b;
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.35);
+  --shadow-md: 0 10px 30px -8px rgb(0 0 0 / 0.55);
+  --shadow-lg: 0 24px 60px -16px rgb(0 0 0 / 0.75);
+}
