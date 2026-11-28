@@ -1,35 +1,76 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@/providers/AuthProvider';
-import { useTheme } from '@/providers/ThemeProvider';
-import { NextLogo } from '@/components/layout/NextLogo';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import {
+  ArrowRight,
+  Bot,
+  Building2,
+  CalendarDays,
+  CheckCircle2,
+  ChevronDown,
   Clock,
   Coffee,
+  FileSpreadsheet,
+  IndianRupee,
+  Lock,
   Play,
   ShieldCheck,
-  Building2,
-  FileText,
-  Users,
-  ArrowRight,
-  Sparkles,
-  Calendar,
-  Moon,
-  Sun,
-  IndianRupee,
-  Menu,
-  X,
-  CheckCircle2,
   Smartphone,
+  Sparkles,
+  Users,
 } from 'lucide-react';
+import { LandingNavbar } from '@/components/landing/LandingNavbar';
+import { IntelligenceCoreWrapper } from '@/components/three/scenes/IntelligenceCoreWrapper';
+import { NextLogo } from '@/components/layout/NextLogo';
+
+gsap.registerPlugin(ScrollTrigger);
+
+const STORY_STEPS = [
+  {
+    step: '01',
+    title: 'Workforce Complexity',
+    desc: 'Unify distributed employees, multi-shift attendance, leave ledgers, and statutory payroll in one system.',
+  },
+  {
+    step: '02',
+    title: 'Connected Platform',
+    desc: 'Role-scoped FastAPI services and PostgreSQL keep HR, Finance, and Employee self-service synchronized.',
+  },
+  {
+    step: '03',
+    title: 'Intelligent Automation',
+    desc: 'Atomic leave reservations, LOP deduction sync, and multi-session break tracking run reliably.',
+  },
+  {
+    step: '04',
+    title: 'Nexora AI & Mobile',
+    desc: 'Authorized Nexora Copilot answers workforce questions while PWA & Capacitor deliver native speed.',
+  },
+];
+
+const FAQ_ITEMS = [
+  {
+    q: 'How does Nexora Workforce protect employee and payroll data?',
+    a: 'All routes enforce JWT authentication, role-based access control (SUPER_ADMIN, ADMIN, HR_MANAGER, FINANCE_MANAGER, AUDITOR, EMPLOYEE), and organization scoping on FastAPI and PostgreSQL.',
+  },
+  {
+    q: 'Can Nexora AI Copilot access another employee’s private records?',
+    a: 'No. Nexora Copilot executes only typed, permission-checked backend tools scoped to the authenticated user and organization, never raw AI-generated SQL.',
+  },
+  {
+    q: 'Does Nexora Workforce support mobile installation?',
+    a: 'Yes. It is installable as a Progressive Web App (PWA) on desktop/mobile and packages cleanly via Capacitor for Android and iOS.',
+  },
+];
 
 export function LandingExperience() {
-  const { user, isAdmin } = useAuth();
-  const { isDark, toggleTheme } = useTheme();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
+  // Interactive Demo State (explicitly labeled Demo Preview)
   const [demoPunchedIn, setDemoPunchedIn] = useState(true);
   const [demoOnBreak, setDemoOnBreak] = useState(false);
   const [demoSeconds, setDemoSeconds] = useState(15480);
@@ -43,6 +84,33 @@ export function LandingExperience() {
     }, 1000);
     return () => window.clearInterval(timer);
   }, [demoPunchedIn, demoOnBreak]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>('.nexora-reveal').forEach((el) => {
+        gsap.fromTo(
+          el,
+          { opacity: 0, y: 24 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: el,
+              start: 'top 86%',
+              once: true,
+            },
+          }
+        );
+      });
+    }, rootRef);
+
+    return () => ctx.revert();
+  }, []);
 
   const formatTimer = (totalSeconds: number) => {
     const hrs = Math.floor(totalSeconds / 3600);
@@ -58,254 +126,341 @@ export function LandingExperience() {
   const calcTDS = demoGrossSalary > 75000 ? demoGrossSalary * 0.08 : demoGrossSalary * 0.03;
   const netTakeHome = demoGrossSalary - (calcEPF + calcESIC + calcPT + calcTDS);
 
-  const portalHref = user ? (isAdmin ? '/admin' : '/employee') : '/login';
-
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#060D1F] text-slate-900 dark:text-[#F8FAFC] transition-colors">
-      {/* Top Navbar */}
-      <header className="sticky top-0 z-40 bg-white/85 dark:bg-[#060D1F]/85 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-          <NextLogo size="md" href="/" showTagline />
+    <div ref={rootRef} className="min-h-screen bg-[var(--background)] text-[var(--text-primary)] overflow-x-hidden">
+      <LandingNavbar />
 
-          <nav className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600 dark:text-slate-300">
-            <a href="#features" className="hover:text-[#2563EB] dark:hover:text-[#06B6D4] transition-colors">Features</a>
-            <a href="#payroll" className="hover:text-[#2563EB] dark:hover:text-[#06B6D4] transition-colors">Indian Payroll</a>
-            <a href="#security" className="hover:text-[#2563EB] dark:hover:text-[#06B6D4] transition-colors">Security</a>
-            <a href="#mobile" className="hover:text-[#2563EB] dark:hover:text-[#06B6D4] transition-colors">Mobile &amp; PWA</a>
-          </nav>
-
-          <div className="hidden md:flex items-center gap-3">
-            <button
-              type="button"
-              onClick={toggleTheme}
-              className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-              aria-label="Toggle theme"
-            >
-              {isDark ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4" />}
-            </button>
-            <Link
-              href={portalHref}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#0891B2] text-white text-sm font-bold shadow-md shadow-[#2563EB]/25 hover:opacity-95 transition"
-            >
-              <span>{user ? 'Open Dashboard' : 'Sign In'}</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen((p) => !p)}
-            className="md:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
-
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-slate-200 dark:border-slate-800 px-4 py-4 space-y-3 bg-white dark:bg-[#0B1426]">
-            <a href="#features" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-semibold">Features</a>
-            <a href="#payroll" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-semibold">Indian Payroll</a>
-            <a href="#security" onClick={() => setMobileMenuOpen(false)} className="block text-sm font-semibold">Security</a>
-            <Link
-              href={portalHref}
-              className="block w-full text-center py-2.5 rounded-xl bg-[#2563EB] text-white text-sm font-bold"
-            >
-              {user ? 'Open Dashboard' : 'Sign In'}
-            </Link>
-          </div>
-        )}
-      </header>
-
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 dark:bg-[#111C32] border border-blue-200 dark:border-[#2563EB]/40 text-[#2563EB] dark:text-[#06B6D4] text-xs font-bold mb-6">
+      {/* 1. Cinematic 3D Hero */}
+      <section className="relative pt-10 pb-20 lg:pt-16 lg:pb-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div className="lg:col-span-6 space-y-6">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 text-blue-600 dark:text-cyan-300 text-xs font-semibold">
               <Sparkles className="w-3.5 h-3.5" />
-              <span>Nexora Workforce 3.0 &bull; Next.js + FastAPI + PostgreSQL</span>
+              <span>Nexora Workforce 3.0 &middot; Enterprise EMS</span>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1]">
-              Enterprise Workforce Management.{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#2563EB] to-[#06B6D4]">
-                Anywhere. On Any Device.
+
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.08]">
+              The Future of Workforce Management{' '}
+              <span className="bg-gradient-to-r from-[#3B82F6] via-[#8B5CF6] to-[#22D3EE] bg-clip-text text-transparent">
+                Starts Here.
               </span>
             </h1>
-            <p className="mt-6 text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl">
-              Manage employee directories, multi-session attendance &amp; breaks, 10-ledger leave balances, expense reimbursements, and Indian statutory payroll in one unified SaaS platform.
+
+            <p className="text-base sm:text-lg text-[var(--text-secondary)] max-w-xl leading-relaxed">
+              Manage your people, attendance, payroll, performance and workplace intelligence through
+              one connected enterprise platform.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4">
-              <Link
-                href={portalHref}
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#0891B2] text-white font-bold text-sm shadow-lg shadow-[#2563EB]/25"
-              >
-                <span>{user ? 'Go to Portal' : 'Sign In to Nexora EMS'}</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
+
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <a
-                href="#payroll"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl border border-slate-300 dark:border-slate-700 font-bold text-sm hover:bg-slate-100 dark:hover:bg-slate-800/60 transition"
+                href="#features"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#3B82F6] to-[#2563EB] text-white text-sm font-semibold shadow-lg shadow-blue-500/25 hover:opacity-95 transition-opacity"
               >
-                Try Payroll Calculator
+                <span>Explore Nexora Workforce</span>
+                <ArrowRight className="w-4 h-4" />
               </a>
+
+              <a
+                href="#showcase"
+                className="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl border border-[var(--border)] bg-[var(--surface)] text-sm font-semibold hover:bg-[var(--surface-elevated)] transition-colors"
+              >
+                <span>Experience the Platform</span>
+              </a>
+
+              <Link
+                href="/login"
+                className="inline-flex items-center gap-1.5 px-4 py-3.5 text-sm font-semibold text-[var(--primary)] hover:underline"
+              >
+                <span>Sign In</span>
+              </Link>
             </div>
           </div>
 
-          {/* Interactive Live Attendance Simulator */}
-          <div className="bg-white dark:bg-[#111C32] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wider text-[#2563EB] dark:text-[#06B6D4]">
-                  Interactive Attendance Engine Preview
-                </p>
-                <h2 className="text-lg font-bold mt-1">Live Shift &amp; Break Tracker</h2>
+          <div className="lg:col-span-6">
+            <div className="rounded-3xl border border-[var(--border)] bg-[var(--surface)]/70 p-2 shadow-2xl">
+              <IntelligenceCoreWrapper showQualityToggle />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 2. Scroll Storytelling Strip */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-[var(--border)]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {STORY_STEPS.map((item) => (
+            <div
+              key={item.step}
+              className="nexora-reveal rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 space-y-2"
+            >
+              <span className="font-mono text-xs font-bold text-[var(--accent)]">{item.step}</span>
+              <h2 className="font-display text-base font-bold">{item.title}</h2>
+              <p className="text-xs text-[var(--text-secondary)] leading-relaxed">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 3. Interactive Product Showcase (Demo Preview) */}
+      <section id="showcase" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="nexora-reveal text-center max-w-2xl mx-auto mb-12 space-y-3">
+          <span className="px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-wider border border-[var(--border)] bg-[var(--surface-elevated)] text-[var(--text-secondary)]">
+            Interactive Demo Preview
+          </span>
+          <h2 className="font-display text-3xl sm:text-4xl font-bold">
+            Live Attendance &amp; Indian Statutory Payroll
+          </h2>
+          <p className="text-sm text-[var(--text-secondary)]">
+            Test our multi-session shift timer and statutory EPF/ESIC/PT/TDS breakdown using
+            client-side demonstration values.
+          </p>
+        </div>
+
+        <div className="nexora-reveal grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Interactive Attendance Card */}
+          <div className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-8 space-y-6 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-xl bg-blue-500/15 text-blue-500 flex items-center justify-center">
+                  <Clock className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-display text-base font-bold">Multi-Session Attendance</h3>
+                  <p className="text-xs text-[var(--text-secondary)]">Demo Shift &middot; 09:30 – 18:30 IST</p>
+                </div>
               </div>
               <span
-                className={`px-3 py-1 rounded-full text-xs font-bold ${
-                  demoPunchedIn
-                    ? demoOnBreak
-                      ? 'bg-amber-500/15 text-amber-500'
-                      : 'bg-emerald-500/15 text-emerald-500'
-                    : 'bg-slate-500/15 text-slate-400'
+                className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                  !demoPunchedIn
+                    ? 'bg-slate-500/15 text-slate-400'
+                    : demoOnBreak
+                    ? 'bg-amber-500/15 text-amber-500'
+                    : 'bg-emerald-500/15 text-emerald-500'
                 }`}
               >
-                {demoPunchedIn ? (demoOnBreak ? 'ON BREAK' : 'ACTIVE SHIFT') : 'CLOCKED OUT'}
+                {!demoPunchedIn ? 'Checked Out' : demoOnBreak ? 'On Break' : 'Checked In'}
               </span>
             </div>
 
-            <div className="p-6 rounded-2xl bg-slate-50 dark:bg-[#0B1426] border border-slate-200/80 dark:border-slate-800 text-center">
-              <p className="text-xs text-slate-500 dark:text-slate-400 uppercase font-semibold">Worked Duration</p>
-              <p className="text-4xl sm:text-5xl font-mono font-extrabold tracking-tight mt-2 text-slate-900 dark:text-white">
-                {formatTimer(demoSeconds)}
+            <div className="py-6 rounded-2xl bg-[var(--surface-elevated)] border border-[var(--border)] text-center">
+              <p className="text-xs uppercase tracking-wider text-[var(--text-secondary)] mb-1">
+                Active Work Duration
               </p>
+              <p className="font-mono text-4xl font-bold tabular-nums">{formatTimer(demoSeconds)}</p>
             </div>
 
-            <div className="mt-6 grid grid-cols-2 gap-3">
+            <div className="flex flex-wrap gap-3">
               <button
                 type="button"
                 onClick={() => {
                   setDemoPunchedIn((p) => !p);
                   setDemoOnBreak(false);
                 }}
-                className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-[#2563EB] hover:bg-[#1D4ED8] text-white text-xs font-bold transition"
+                className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#3B82F6] text-white text-xs font-semibold"
               >
-                <Play className="w-4 h-4" />
-                {demoPunchedIn ? 'Punch Out' : 'Punch In'}
+                <Play className="w-3.5 h-3.5" />
+                <span>{demoPunchedIn ? 'Demo Punch Out' : 'Demo Punch In'}</span>
               </button>
               <button
                 type="button"
                 disabled={!demoPunchedIn}
                 onClick={() => setDemoOnBreak((b) => !b)}
-                className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold disabled:opacity-50 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-[var(--border)] bg-[var(--surface-elevated)] text-xs font-semibold disabled:opacity-40"
               >
-                <Coffee className="w-4 h-4 text-amber-500" />
-                {demoOnBreak ? 'Resume Work' : 'Take Break'}
+                <Coffee className="w-3.5 h-3.5" />
+                <span>{demoOnBreak ? 'Resume Work' : 'Start Break'}</span>
               </button>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Features Grid */}
-      <section id="features" className="py-16 px-4 sm:px-6 lg:px-8 border-t border-slate-200/80 dark:border-slate-800/80">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-extrabold text-center mb-12">Complete Enterprise HR Suite</h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              { icon: Users, title: 'Employee Directory & Org Chart', desc: 'Centralized profiles, onboarding balances, Excel/CSV exports, and visual hierarchy.' },
-              { icon: Clock, title: 'Multi-Session Attendance', desc: 'Real-time punch-in/out, break tracking, midnight crossing, and regularization approvals.' },
-              { icon: Calendar, title: '10-Ledger Leave System', desc: 'Casual, Sick, Earned, Maternity, Paternity, weekend exclusion, and atomic balance ledgers.' },
-              { icon: IndianRupee, title: 'Indian Statutory Payroll', desc: 'EPF 12%, ESIC 0.75%, Professional Tax, TDS, LOP, and ReportLab PDF payslips.' },
-              { icon: FileText, title: 'Expense Claims & Documents', desc: 'Employee reimbursement submissions, admin approval amounts, and encrypted document vault.' },
-              { icon: Building2, title: 'Multi-Tenant Organizations', desc: 'Tenant-scoped PostgreSQL architecture with role-based permissions and audit logs.' },
-            ].map((f) => {
-              const Icon = f.icon;
-              return (
-                <div key={f.title} className="p-6 rounded-2xl bg-white dark:bg-[#111C32] border border-slate-200 dark:border-slate-800 shadow-sm">
-                  <div className="w-11 h-11 rounded-xl bg-blue-500/10 text-[#2563EB] dark:text-[#06B6D4] flex items-center justify-center mb-4">
-                    <Icon className="w-5 h-5" />
-                  </div>
-                  <h3 className="font-bold text-lg mb-2">{f.title}</h3>
-                  <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{f.desc}</p>
+          {/* Interactive Payroll Card */}
+          <div className="rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 sm:p-8 space-y-5 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-xl bg-violet-500/15 text-violet-500 flex items-center justify-center">
+                  <IndianRupee className="w-5 h-5" />
                 </div>
-              );
-            })}
+                <div>
+                  <h3 className="font-display text-base font-bold">Indian Statutory Payroll</h3>
+                  <p className="text-xs text-[var(--text-secondary)]">Interactive Gross-to-Net Preview</p>
+                </div>
+              </div>
+              <span className="font-mono text-sm font-bold tabular-nums text-[var(--primary)]">
+                ₹{demoGrossSalary.toLocaleString('en-IN')}
+              </span>
+            </div>
+
+            <div>
+              <label htmlFor="demo-salary-range" className="text-xs text-[var(--text-secondary)] block mb-2">
+                Adjust Monthly Gross Salary
+              </label>
+              <input
+                id="demo-salary-range"
+                type="range"
+                min={18000}
+                max={200000}
+                step={1000}
+                value={demoGrossSalary}
+                onChange={(e) => setDemoGrossSalary(Number(e.target.value))}
+                className="w-full accent-[#3B82F6]"
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="p-3 rounded-xl bg-[var(--surface-elevated)]">
+                <span className="text-[var(--text-secondary)]">Basic (50%)</span>
+                <p className="font-mono font-bold tabular-nums mt-0.5">₹{calcBasic.toLocaleString('en-IN')}</p>
+              </div>
+              <div className="p-3 rounded-xl bg-[var(--surface-elevated)]">
+                <span className="text-[var(--text-secondary)]">EPF (12% capped)</span>
+                <p className="font-mono font-bold tabular-nums mt-0.5">₹{Math.round(calcEPF).toLocaleString('en-IN')}</p>
+              </div>
+              <div className="p-3 rounded-xl bg-[var(--surface-elevated)]">
+                <span className="text-[var(--text-secondary)]">ESIC + PT + TDS</span>
+                <p className="font-mono font-bold tabular-nums mt-0.5">
+                  ₹{Math.round(calcESIC + calcPT + calcTDS).toLocaleString('en-IN')}
+                </p>
+              </div>
+              <div className="p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+                <span className="text-emerald-600 dark:text-emerald-400 font-medium">Net Take-Home</span>
+                <p className="font-mono font-bold tabular-nums text-emerald-600 dark:text-emerald-300 mt-0.5">
+                  ₹{Math.round(netTakeHome).toLocaleString('en-IN')}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Interactive Payroll Calculator */}
-      <section id="payroll" className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-100/70 dark:bg-[#0B1426]/60">
-        <div className="max-w-4xl mx-auto bg-white dark:bg-[#111C32] border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 shadow-xl">
-          <h2 className="text-2xl font-extrabold mb-2">Interactive Indian Statutory Payroll Preview</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
-            Slide monthly gross CTC to inspect EPF, ESIC, Professional Tax, and estimated take-home pay.
+      {/* 4. Asymmetric Bento Grid Features */}
+      <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-[var(--border)]">
+        <div className="nexora-reveal max-w-2xl mb-12 space-y-2">
+          <h2 className="font-display text-3xl sm:text-4xl font-bold">
+            Everything Your Organization Runs On
+          </h2>
+          <p className="text-sm text-[var(--text-secondary)]">
+            Built directly on FastAPI, PostgreSQL, and Role-Based Access Control.
           </p>
-          <div className="mb-6">
-            <div className="flex justify-between text-sm font-bold mb-2">
-              <span>Monthly Gross Salary</span>
-              <span className="text-[#2563EB] dark:text-[#06B6D4]">₹{demoGrossSalary.toLocaleString('en-IN')}</span>
-            </div>
-            <input
-              type="range"
-              min={15000}
-              max={250000}
-              step={5000}
-              value={demoGrossSalary}
-              onChange={(e) => setDemoGrossSalary(Number(e.target.value))}
-              aria-label="Monthly Gross Salary"
-              className="w-full accent-[#2563EB]"
-            />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
+          <div className="nexora-reveal md:col-span-3 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 space-y-3 hover:border-blue-500/40 transition-colors">
+            <Users className="w-6 h-6 text-[#3B82F6]" />
+            <h3 className="font-display text-lg font-bold">Employee Directory &amp; Org Chart</h3>
+            <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+              Manage employee profiles, onboarding status, department hierarchies, and document
+              repositories with role-scoped visibility.
+            </p>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#0B1426]">
-              <p className="text-xs text-slate-500">EPF (12%)</p>
-              <p className="font-bold mt-1">₹{Math.round(calcEPF).toLocaleString('en-IN')}</p>
+
+          <div className="nexora-reveal md:col-span-3 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 space-y-3 hover:border-violet-500/40 transition-colors">
+            <CalendarDays className="w-6 h-6 text-[#8B5CF6]" />
+            <h3 className="font-display text-lg font-bold">10 Corporate Leave Ledgers</h3>
+            <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+              Atomic pending reservation, holiday/weekend exclusion, half-day requests, and full
+              approval/cancellation audit trails.
+            </p>
+          </div>
+
+          <div id="nexora-ai" className="nexora-reveal md:col-span-4 rounded-3xl border border-blue-500/30 bg-gradient-to-br from-[#0B1120] to-[#111827] text-white p-6 space-y-3">
+            <div className="inline-flex items-center gap-2 text-cyan-300 text-xs font-semibold">
+              <Bot className="w-5 h-5" />
+              <span>Nexora AI Copilot</span>
             </div>
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#0B1426]">
-              <p className="text-xs text-slate-500">ESIC (0.75%)</p>
-              <p className="font-bold mt-1">₹{Math.round(calcESIC).toLocaleString('en-IN')}</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-slate-50 dark:bg-[#0B1426]">
-              <p className="text-xs text-slate-500">PT + Est. TDS</p>
-              <p className="font-bold mt-1">₹{Math.round(calcPT + calcTDS).toLocaleString('en-IN')}</p>
-            </div>
-            <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
-              <p className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Est. Net Pay</p>
-              <p className="font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">
-                ₹{Math.round(netTakeHome).toLocaleString('en-IN')}
-              </p>
-            </div>
+            <h3 className="font-display text-xl font-bold">
+              RBAC-Enforced Workforce Intelligence &amp; RAG
+            </h3>
+            <p className="text-xs text-slate-300 leading-relaxed max-w-xl">
+              Stream natural-language answers grounded in your authorized workforce tools and
+              pgvector-indexed HR policies—supporting Gemini, OpenAI, Claude, Groq, DeepSeek, and Ollama.
+            </p>
+          </div>
+
+          <div className="nexora-reveal md:col-span-2 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 space-y-3">
+            <Building2 className="w-6 h-6 text-[#22D3EE]" />
+            <h3 className="font-display text-lg font-bold">Departments &amp; Expenses</h3>
+            <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+              Department headcounts, expense claim approvals, and multi-format CSV/Excel/PDF exports.
+            </p>
+          </div>
+
+          <div id="security" className="nexora-reveal md:col-span-3 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 space-y-3">
+            <ShieldCheck className="w-6 h-6 text-[#10B981]" />
+            <h3 className="font-display text-lg font-bold">Enterprise Security &amp; Audit Logs</h3>
+            <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+              Argon2 password hashing, JWT refresh token rotation, strict CORS/CSP headers, and
+              immutable system &amp; AI audit logs.
+            </p>
+          </div>
+
+          <div className="nexora-reveal md:col-span-3 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 space-y-3">
+            <Smartphone className="w-6 h-6 text-[#3B82F6]" />
+            <h3 className="font-display text-lg font-bold">PWA &amp; Capacitor Mobile Ready</h3>
+            <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+              Install directly from Chrome/Safari or package with Capacitor for Android and iOS
+              with bottom navigation and safe-area support.
+            </p>
           </div>
         </div>
       </section>
 
-      {/* Security & Mobile Showcase */}
-      <section id="security" className="py-16 px-4 sm:px-6 lg:px-8">
-        <div id="mobile" className="max-w-7xl mx-auto grid md:grid-cols-2 gap-8">
-          <div className="p-8 rounded-3xl bg-white dark:bg-[#111C32] border border-slate-200 dark:border-slate-800">
-            <ShieldCheck className="w-8 h-8 text-[#2563EB] mb-4" />
-            <h3 className="text-xl font-extrabold mb-3">Enterprise Security Architecture</h3>
-            <ul className="space-y-2.5 text-sm text-slate-600 dark:text-slate-300">
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Argon2id password hashing &amp; rotating JWT refresh tokens</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Authoritative FastAPI RBAC &amp; rate-limited authentication</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> PostgreSQL parameterized queries &amp; strict CORS policies</li>
-            </ul>
-          </div>
-          <div className="p-8 rounded-3xl bg-white dark:bg-[#111C32] border border-slate-200 dark:border-slate-800">
-            <Smartphone className="w-8 h-8 text-[#06B6D4] mb-4" />
-            <h3 className="text-xl font-extrabold mb-3">Installable PWA &amp; Mobile Ready</h3>
-            <ul className="space-y-2.5 text-sm text-slate-600 dark:text-slate-300">
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Standalone installable Progressive Web Application</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Ergonomic 1-thumb mobile bottom navigation &amp; safe areas</li>
-              <li className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Capacitor configuration ready for Android &amp; iOS wrappers</li>
-            </ul>
-          </div>
+      {/* 5. FAQ */}
+      <section id="faq" className="py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto border-t border-[var(--border)]">
+        <h2 className="font-display text-2xl sm:text-3xl font-bold text-center mb-8">
+          Frequently Asked Questions
+        </h2>
+        <div className="space-y-3">
+          {FAQ_ITEMS.map((item, idx) => {
+            const isOpen = openFaq === idx;
+            return (
+              <div
+                key={item.q}
+                className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] overflow-hidden"
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpenFaq(isOpen ? null : idx)}
+                  className="w-full px-5 py-4 flex items-center justify-between text-left text-sm font-semibold"
+                >
+                  <span>{item.q}</span>
+                  <ChevronDown
+                    className={`w-4 h-4 text-[var(--text-secondary)] transition-transform ${
+                      isOpen ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+                {isOpen && (
+                  <p className="px-5 pb-4 text-xs text-[var(--text-secondary)] leading-relaxed">
+                    {item.a}
+                  </p>
+                )}
+              </div>
+            );
+          })}
         </div>
       </section>
 
-      <footer className="border-t border-slate-200 dark:border-slate-800 py-8 px-4 text-center text-xs text-slate-500 dark:text-slate-400">
-        &copy; {new Date().getFullYear()} Nexora Technologies Inc. &bull; Nexora Workforce 3.0
+      {/* 6. Premium Footer */}
+      <footer className="border-t border-[var(--border)] bg-[var(--surface)] py-10 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <NextLogo size="sm" href="/" showTagline={false} />
+          <div className="flex items-center gap-4 text-xs text-[var(--text-secondary)]">
+            <span className="inline-flex items-center gap-1">
+              <Lock className="w-3.5 h-3.5 text-emerald-500" />
+              Role-Based Access Control
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <FileSpreadsheet className="w-3.5 h-3.5 text-blue-500" />
+              Statutory Payroll Ready
+            </span>
+            <span className="inline-flex items-center gap-1">
+              <CheckCircle2 className="w-3.5 h-3.5 text-cyan-500" />
+              Nexora Technologies
+            </span>
+          </div>
+          <Link href="/login" className="text-xs font-semibold text-[var(--primary)] hover:underline">
+            Sign in to Nexora EMS &rarr;
+          </Link>
+        </div>
       </footer>
     </div>
   );

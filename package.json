@@ -10,7 +10,7 @@
     "mobile:build": "node -e \"require('child_process').execSync('npx next build', { stdio: 'inherit', env: { ...process.env, NEXT_PUBLIC_MOBILE_BUILD: 'true' } })\"",
     "vite:dev": "vite",
     "vite:build": "vite build",
-    "lint": "eslint src/app src/providers src/components/layout src/components/landing src/components/shared src/components/ai src/components/navigation src/components/feedback src/features/ai src/types src/services tests/unit",
+    "lint": "eslint src/app src/providers src/components/layout src/components/landing src/components/shared src/components/ai src/components/navigation src/components/feedback src/components/three src/features/ai src/types src/services tests/unit",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
